@@ -181,15 +181,16 @@ def _encode(model_type, model, tokenizer, texts):
             # Mean pooling
             output_vectors.append(sum_embeddings / sum_mask)
             output_vector = torch.cat(output_vectors, 1)
-            enc = output_vector
+            output_vector = torch.nn.functional.normalize(output_vector, p=2, dim=1)
+            encs[text] = output_vector
             
         else:
             # Average over the last layer of hidden representations.
             enc = outputs["last_hidden_state"]
             enc = enc.mean(dim=1)
 
-        # Following May et al., normalize the representation.
-        encs[text] = enc.detach().view(-1).numpy()
-        encs[text] /= np.linalg.norm(encs[text])
+            # Following May et al., normalize the representation.
+            encs[text] = enc.detach().view(-1).numpy()
+            encs[text] /= np.linalg.norm(encs[text])
 
     return encs
