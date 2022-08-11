@@ -167,7 +167,7 @@ def _encode(model_type, model, tokenizer, texts):
         outputs = model(**inputs)
         
         if model_type == "ST":
-            
+            output_vectors = []
             token_embeddings = outputs['last_hidden_state']
             attention_mask = inputs['attention_mask']
             
