@@ -182,7 +182,7 @@ def _encode(model_type, model, tokenizer, texts):
             output_vectors.append(sum_embeddings / sum_mask)
             output_vector = torch.cat(output_vectors, 1)
             output_vector = torch.nn.functional.normalize(output_vector, p=2, dim=1)
-            encs[text] = output_vector
+            encs[text] = output_vector.detach().view(-1).numpy()
             
         else:
             # Average over the last layer of hidden representations.
