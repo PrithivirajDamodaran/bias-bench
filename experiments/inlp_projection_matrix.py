@@ -91,7 +91,9 @@ if __name__ == "__main__":
         tokenizer,
         data,
         bias_type=args.bias_type,
+        model_type =  model_type
         n_classifiers=args.n_classifiers,
+
     )
     
     if model_type == "ST":
