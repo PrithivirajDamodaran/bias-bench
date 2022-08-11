@@ -97,5 +97,5 @@ if __name__ == "__main__":
     print(results)
 
     os.makedirs(f"{args.persistent_dir}/results/seat", exist_ok=True)
-    with open(f"{args.persistent_dir}/results/seat/{model_type}/{model}.json", "w") as f:
+    with open(f"{args.persistent_dir}/results/seat/{model_type}/{args.model_name_or_path}.json", "w") as f:
         json.dump(results, f)
