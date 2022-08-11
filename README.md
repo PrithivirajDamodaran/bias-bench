@@ -18,7 +18,7 @@ For tracking progress on the intrinsic bias benchmarks evaluated in this work, w
 
 ## Install
 ```bash
-git clone https://github.com/mcgill-nlp/bias-bench.git
+git clone https://github.com/PrithivirajDamodaran/bias-bench.git
 cd bias-bench 
 python -m pip install -e .
 ```
