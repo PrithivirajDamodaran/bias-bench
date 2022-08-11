@@ -42,7 +42,7 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["sentence-transformers/paraphrase-MiniLM-L6-v2", "bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    choices=["sentence-transformers/all-MiniLM-L6-v2", "bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -97,5 +97,5 @@ if __name__ == "__main__":
     print(results)
 
     os.makedirs(f"{args.persistent_dir}/results/seat", exist_ok=True)
-    with open(f"{args.persistent_dir}/results/seat/{experiment_id}.json", "w") as f:
+    with open(f"{args.persistent_dir}/results/seat/{model_type}/{model}.json", "w") as f:
         json.dump(results, f)
