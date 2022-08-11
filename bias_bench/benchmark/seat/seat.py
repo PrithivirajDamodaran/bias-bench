@@ -166,6 +166,7 @@ def _encode(model_type, model, tokenizer, texts):
         inputs = tokenizer(text, return_tensors="pt")
         outputs = model(**inputs)
         
+        # Pooling strategy code directly borrowed from ST: https://github.com/UKPLab/sentence-transformers/blob/master/sentence_transformers/models/Pooling.py
         if model_type == "ST":
             output_vectors = []
             token_embeddings = outputs['last_hidden_state']
