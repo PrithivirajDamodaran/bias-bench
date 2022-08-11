@@ -74,9 +74,10 @@ if __name__ == "__main__":
     
     if "sentence-transformers" in args.model_name_or_path:
         model_type = "ST"
+        model_str = args.model_name_or_path.replace("sentence-transformers/" ,"")
     else:
-        model_type= "NA"
-        
+        model_type= "Vanilla"
+       
 
     # Load model and tokenizer.
     model = getattr(models, args.model)(args.model_name_or_path)
@@ -96,6 +97,12 @@ if __name__ == "__main__":
     results = runner()
     print(results)
 
-    os.makedirs(f"{args.persistent_dir}/results/seat", exist_ok=True)
-    with open(f"{args.persistent_dir}/results/seat/{model_type}/{args.model_name_or_path}.json", "w") as f:
-        json.dump(results, f)
+    os.makedirs(f"{args.persistent_dir}/results/seat/{model_type}", exist_ok=True)    
+    if model_type == "ST"
+        with open(f"{args.persistent_dir}/results/seat/{model_type}/{model_str}.json", "w") as f:
+            json.dump(results, f)
+    else:
+        with open(f"{args.persistent_dir}/results/seat/{model_type}/{args.model_name_or_path}.json", "w") as f:
+            json.dump(results, f)
+
+            
