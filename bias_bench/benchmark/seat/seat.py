@@ -21,6 +21,7 @@ class SEATRunner:
     def __init__(
         self,
         model,
+        model_type = "ST",
         tokenizer,
         tests,
         data_dir,
@@ -163,10 +164,27 @@ def _encode(model, tokenizer, texts):
         # Encode each example.
         inputs = tokenizer(text, return_tensors="pt")
         outputs = model(**inputs)
+        
+        if self.model_type == "ST":
+            
+            token_embeddings = outputs['last_hidden_state']
+            attention_mask = inputs['attention_mask']
+            
+            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+            sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
 
-        # Average over the last layer of hidden representations.
-        enc = outputs["last_hidden_state"]
-        enc = enc.mean(dim=1)
+            sum_mask = input_mask_expanded.sum(1)
+            sum_mask = torch.clamp(sum_mask, min=1e-9)
+            
+            # Mean pooling
+            output_vectors.append(sum_embeddings / sum_mask)
+            output_vector = torch.cat(output_vectors, 1)
+            enc = output_vector
+            
+        else:
+            # Average over the last layer of hidden representations.
+            enc = outputs["last_hidden_state"]
+            enc = enc.mean(dim=1)
 
         # Following May et al., normalize the representation.
         encs[text] = enc.detach().view(-1).numpy()
