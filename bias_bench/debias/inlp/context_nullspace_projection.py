@@ -155,7 +155,7 @@ def _split_binary_dataset(bias_feat, neut_feat):
 
 
 def _apply_nullspace_projection(
-    X_train, X_dev, X_test, Y_train, Y_dev, Y_test, n_classifiers=80
+    X_train, X_dev, X_test, Y_train, Y_dev, Y_test, model_type, n_classifiers=80
 ):
     classifier_parameters = {
         "fit_intercept": False,
@@ -163,28 +163,46 @@ def _apply_nullspace_projection(
         "dual": False,
         "random_state": 0,
     }
-
-    P, rowspace_projs, Ws = debias.get_debiasing_projection(
-        classifier_class=LinearSVC,
-        cls_params=classifier_parameters,
-        num_classifiers=n_classifiers,
-        input_dim=768,
-        is_autoregressive=True,
-        min_accuracy=0,
-        X_train=X_train,
-        Y_train=Y_train,
-        X_dev=X_dev,
-        Y_dev=Y_dev,
-        Y_train_main=None,
-        Y_dev_main=None,
-        by_class=False,
-        dropout_rate=0,
-    )
+    
+    if model_type == "ST":
+            P, rowspace_projs, Ws = debias.get_debiasing_projection(
+                classifier_class=LinearSVC,
+                cls_params=classifier_parameters,
+                num_classifiers=n_classifiers,
+                input_dim=384,
+                is_autoregressive=True,
+                min_accuracy=0,
+                X_train=X_train,
+                Y_train=Y_train,
+                X_dev=X_dev,
+                Y_dev=Y_dev,
+                Y_train_main=None,
+                Y_dev_main=None,
+                by_class=False,
+                dropout_rate=0,
+            )
+     else:     
+        P, rowspace_projs, Ws = debias.get_debiasing_projection(
+                classifier_class=LinearSVC,
+                cls_params=classifier_parameters,
+                num_classifiers=n_classifiers,
+                input_dim=768,
+                is_autoregressive=True,
+                min_accuracy=0,
+                X_train=X_train,
+                Y_train=Y_train,
+                X_dev=X_dev,
+                Y_dev=Y_dev,
+                Y_train_main=None,
+                Y_dev_main=None,
+                by_class=False,
+                dropout_rate=0,
+            )
 
     return P, rowspace_projs, Ws
 
 
-def compute_projection_matrix(model, tokenizer, data, bias_type, n_classifiers=80):
+def compute_projection_matrix(model, tokenizer, data, bias_type,  model_type, n_classifiers=80):
     """Runs INLP.
 
     Notes:
@@ -231,7 +249,7 @@ def compute_projection_matrix(model, tokenizer, data, bias_type, n_classifiers=8
     )
 
     P, rowspace_projs, Ws = _apply_nullspace_projection(
-        X_train, X_dev, X_test, Y_train, Y_dev, Y_test, n_classifiers=n_classifiers
+        X_train, X_dev, X_test, Y_train, Y_dev, Y_test, model_type, n_classifiers=n_classifiers
     )
 
     P = torch.tensor(P, dtype=torch.float32)
