@@ -8,9 +8,22 @@ import scipy.stats
 # X and Y are two sets of target words of equal size.
 # A and B are two sets of attribute words.
 
+def cossim(a, b):
+    """
+   Computes the pairwise dot-product dot_prod(a[i], b[i])
+   :return: Vector with res[i] = dot_prod(a[i], b[i])
+   """
+    if not isinstance(a, torch.Tensor):
+        a = torch.tensor(a)
 
-def cossim(x, y):
-    return np.dot(x, y) / math.sqrt(np.dot(x, x) * np.dot(y, y))
+    if not isinstance(b, torch.Tensor):
+        b = torch.tensor(b)
+
+    return (a * b).sum(dim=-1)
+
+
+# def cossim(x, y):
+#     return np.dot(x, y) / math.sqrt(np.dot(x, x) * np.dot(y, y))
 
 
 def construct_cossim_lookup(XY, AB):
