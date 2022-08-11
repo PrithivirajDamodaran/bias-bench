@@ -71,6 +71,12 @@ if __name__ == "__main__":
     print(f" - parametric: {args.parametric}")
     print(f" - model: {args.model}")
     print(f" - model_name_or_path: {args.model_name_or_path}")
+    
+    if "sentence-transformers" in model_name_or_path:
+        model_type = "ST"
+    else:
+        model_type= "NA"
+        
 
     # Load model and tokenizer.
     model = getattr(models, args.model)(args.model_name_or_path)
@@ -84,6 +90,7 @@ if __name__ == "__main__":
         n_samples=args.n_samples,
         parametric=args.parametric,
         model=model,
+        model_type = model_type,
         tokenizer=tokenizer,
     )
     results = runner()
