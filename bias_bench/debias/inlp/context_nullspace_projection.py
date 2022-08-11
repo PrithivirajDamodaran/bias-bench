@@ -165,23 +165,23 @@ def _apply_nullspace_projection(
     }
     
     if model_type == "ST":
-            P, rowspace_projs, Ws = debias.get_debiasing_projection(
-                classifier_class=LinearSVC,
-                cls_params=classifier_parameters,
-                num_classifiers=n_classifiers,
-                input_dim=384,
-                is_autoregressive=True,
-                min_accuracy=0,
-                X_train=X_train,
-                Y_train=Y_train,
-                X_dev=X_dev,
-                Y_dev=Y_dev,
-                Y_train_main=None,
-                Y_dev_main=None,
-                by_class=False,
-                dropout_rate=0,
-            )
-     else:     
+        P, rowspace_projs, Ws = debias.get_debiasing_projection(
+            classifier_class=LinearSVC,
+            cls_params=classifier_parameters,
+            num_classifiers=n_classifiers,
+            input_dim=384,
+            is_autoregressive=True,
+            min_accuracy=0,
+            X_train=X_train,
+            Y_train=Y_train,
+            X_dev=X_dev,
+            Y_dev=Y_dev,
+            Y_train_main=None,
+            Y_dev_main=None,
+            by_class=False,
+            dropout_rate=0,
+        )
+    else:     
         P, rowspace_projs, Ws = debias.get_debiasing_projection(
                 classifier_class=LinearSVC,
                 cls_params=classifier_parameters,
