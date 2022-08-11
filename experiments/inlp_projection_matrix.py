@@ -106,7 +106,7 @@ if __name__ == "__main__":
             f"{args.persistent_dir}/results/projection_matrix/{model_str}.pt",
         )
     else:
-         print(
+        print(
             f"Saving computed projection matrix to: {args.persistent_dir}/results/projection_matrix/{experiment_id}.pt"
         )
         os.makedirs(f"{args.persistent_dir}/results/projection_matrix", exist_ok=True)
