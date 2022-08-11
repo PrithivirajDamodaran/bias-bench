@@ -72,7 +72,7 @@ if __name__ == "__main__":
     print(f" - model: {args.model}")
     print(f" - model_name_or_path: {args.model_name_or_path}")
     
-    if "sentence-transformers" in model_name_or_path:
+    if "sentence-transformers" in args.model_name_or_path:
         model_type = "ST"
     else:
         model_type= "NA"
