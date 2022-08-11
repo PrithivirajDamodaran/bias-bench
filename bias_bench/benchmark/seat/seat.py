@@ -84,16 +84,16 @@ class SEATRunner:
 
             print("Computing sentence encodings")
             encs_targ1 = _encode(
-                self._model, self._tokenizer, encs["targ1"]["examples"]
+                        self._model_type, self._model, self._tokenizer, encs["targ1"]["examples"]
             )
             encs_targ2 = _encode(
-                self._model, self._tokenizer, encs["targ2"]["examples"]
+                        self._model_type, self._model, self._tokenizer, encs["targ2"]["examples"]
             )
             encs_attr1 = _encode(
-                self._model, self._tokenizer, encs["attr1"]["examples"]
+                        self._model_type, self._model, self._tokenizer, encs["attr1"]["examples"]
             )
             encs_attr2 = _encode(
-                self._model, self._tokenizer, encs["attr2"]["examples"]
+                        self._model_type, self._model, self._tokenizer, encs["attr2"]["examples"]
             )
 
             encs["targ1"]["encs"] = encs_targ1
@@ -159,14 +159,14 @@ def _load_json(sent_file):
     return all_data
 
 
-def _encode(model, tokenizer, texts):
+def _encode(model_type, model, tokenizer, texts):
     encs = {}
     for text in texts:
         # Encode each example.
         inputs = tokenizer(text, return_tensors="pt")
         outputs = model(**inputs)
         
-        if self._model_type == "ST":
+        if model_type == "ST":
             
             token_embeddings = outputs['last_hidden_state']
             attention_mask = inputs['attention_mask']
