@@ -32,7 +32,7 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    choices=["sentence-transformers/all-MiniLM-L6-v2", "bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -71,6 +71,12 @@ if __name__ == "__main__":
     print(f" - bias_type: {args.bias_type}")
     print(f" - n_classifiers: {args.n_classifiers}")
     print(f" - seed: {args.seed}")
+    
+    if "sentence-transformers" in args.model_name_or_path:
+        model_type = "ST"
+        model_str = args.model_name_or_path.replace("sentence-transformers/" ,"")
+    else:
+        model_type= "Vanilla"
 
     # Load data for INLP classifiers.
     data = load_inlp_data(args.persistent_dir, args.bias_type, seed=args.seed)
@@ -87,12 +93,22 @@ if __name__ == "__main__":
         bias_type=args.bias_type,
         n_classifiers=args.n_classifiers,
     )
-
-    print(
-        f"Saving computed projection matrix to: {args.persistent_dir}/results/projection_matrix/{experiment_id}.pt"
-    )
-    os.makedirs(f"{args.persistent_dir}/results/projection_matrix", exist_ok=True)
-    torch.save(
-        projection_matrix,
-        f"{args.persistent_dir}/results/projection_matrix/{experiment_id}.pt",
-    )
+    
+    if model_type == "ST":
+        print(
+            f"Saving computed projection matrix to: {args.persistent_dir}/results/projection_matrix/{model_str}.pt"
+        )
+        os.makedirs(f"{args.persistent_dir}/results/projection_matrix", exist_ok=True)
+        torch.save(
+            projection_matrix,
+            f"{args.persistent_dir}/results/projection_matrix/{model_str}.pt",
+        )
+    else:
+         print(
+            f"Saving computed projection matrix to: {args.persistent_dir}/results/projection_matrix/{experiment_id}.pt"
+        )
+        os.makedirs(f"{args.persistent_dir}/results/projection_matrix", exist_ok=True)
+        torch.save(
+            projection_matrix,
+            f"{args.persistent_dir}/results/projection_matrix/{experiment_id}.pt",
+        )
