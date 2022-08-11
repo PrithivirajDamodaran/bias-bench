@@ -69,7 +69,7 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    choices=["sentence-transformers/all-MiniLM-L6-v2", "bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -121,6 +121,12 @@ if __name__ == "__main__":
     print(f" - projection_matrix: {args.projection_matrix}")
     print(f" - load_path: {args.load_path}")
     print(f" - bias_type: {args.bias_type}")
+    
+    if "sentence-transformers" in args.model_name_or_path:
+        model_type = "ST"
+        model_str = args.model_name_or_path.replace("sentence-transformers/" ,"")
+    else:
+        model_type= "Vanilla"
 
     kwargs = {}
     if args.bias_direction is not None:
@@ -147,11 +153,20 @@ if __name__ == "__main__":
         n_samples=args.n_samples,
         parametric=args.parametric,
         model=model,
+        model_type = model_type,
         tokenizer=tokenizer,
     )
     results = runner()
     print(results)
 
-    os.makedirs(f"{args.persistent_dir}/results/seat", exist_ok=True)
-    with open(f"{args.persistent_dir}/results/seat/{experiment_id}.json", "w") as f:
-        json.dump(results, f)
+#     os.makedirs(f"{args.persistent_dir}/results/seat", exist_ok=True)
+#     with open(f"{args.persistent_dir}/results/seat/{experiment_id}.json", "w") as f:
+#         json.dump(results, f)
+
+    os.makedirs(f"{args.persistent_dir}/results/seat/{model_type}", exist_ok=True)    
+    if model_type == "ST":
+        with open(f"{args.persistent_dir}/results/seat/{model_type}/de_{model_str}.json", "w") as f:
+            json.dump(results, f)
+    else:
+        with open(f"{args.persistent_dir}/results/seat/{model_type}/de_{args.model_name_or_path}.json", "w") as f:
+            json.dump(results, f)     
