@@ -25,7 +25,7 @@ class SEATRunner:
         tests,
         data_dir,
         experiment_id,
-        model_type = "ST",
+        model_type = "NA",
         n_samples=100000,
         parametric=False,
         seed=0,
@@ -51,6 +51,7 @@ class SEATRunner:
         self._experiment_id = experiment_id
         self._n_samples = n_samples
         self._parametric = parametric
+        self._model_type = model_type
         self._seed = seed
 
     def __call__(self):
@@ -165,7 +166,7 @@ def _encode(model, tokenizer, texts):
         inputs = tokenizer(text, return_tensors="pt")
         outputs = model(**inputs)
         
-        if self.model_type == "ST":
+        if self._model_type == "ST":
             
             token_embeddings = outputs['last_hidden_state']
             attention_mask = inputs['attention_mask']
