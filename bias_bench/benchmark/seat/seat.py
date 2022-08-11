@@ -21,11 +21,11 @@ class SEATRunner:
     def __init__(
         self,
         model,
-        model_type = "ST",
         tokenizer,
         tests,
         data_dir,
         experiment_id,
+        model_type = "ST",
         n_samples=100000,
         parametric=False,
         seed=0,
