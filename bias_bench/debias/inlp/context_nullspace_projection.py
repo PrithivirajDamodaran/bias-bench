@@ -31,37 +31,92 @@ def _extract_gender_features(
     # Encode the sentences.
     with torch.no_grad():
         for sentence in tqdm(male_sentences, desc="Encoding male sentences"):
+            
+            output_vectors = []
             input_ids = tokenizer(
                 sentence, add_special_tokens=True, truncation=True, return_tensors="pt"
             ).to(device)
+                
+            #outputs = model(**input_ids)["last_hidden_state"]    
+            outputs = model(**input_ids)
+            #outputs = torch.mean(outputs, dim=1)
+            #outputs = outputs.squeeze().detach().cpu().numpy()
+            
+            token_embeddings = outputs['last_hidden_state']
+            attention_mask = input_ids['attention_mask']
+            
+            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+            sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
 
-            outputs = model(**input_ids)["last_hidden_state"]
-            outputs = torch.mean(outputs, dim=1)
-            outputs = outputs.squeeze().detach().cpu().numpy()
+            sum_mask = input_mask_expanded.sum(1)
+            sum_mask = torch.clamp(sum_mask, min=1e-9)
+            
+            # Mean pooling
+            output_vectors.append(sum_embeddings / sum_mask)
+            output_vector = torch.cat(output_vectors, 1)
+            
 
-            male_features.append(outputs)
+            #male_features.append(outputs)    
+            male_features.append(output_vector.detach().view(-1).numpy())
 
         for sentence in tqdm(female_sentences, desc="Encoding female sentences"):
+            
+            output_vectors = []
             input_ids = tokenizer(
                 sentence, add_special_tokens=True, truncation=True, return_tensors="pt"
             ).to(device)
 
-            outputs = model(**input_ids)["last_hidden_state"]
-            outputs = torch.mean(outputs, dim=1)
-            outputs = outputs.squeeze().detach().cpu().numpy()
+            #outputs = model(**input_ids)["last_hidden_state"]
+            outputs = model(**input_ids)
+            
+            #outputs = torch.mean(outputs, dim=1)
+            #outputs = outputs.squeeze().detach().cpu().numpy()
+            
+            token_embeddings = outputs['last_hidden_state']
+            attention_mask = input_ids['attention_mask']
+            
+            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+            sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
 
-            female_features.append(outputs)
+            sum_mask = input_mask_expanded.sum(1)
+            sum_mask = torch.clamp(sum_mask, min=1e-9)
+            
+            # Mean pooling
+            output_vectors.append(sum_embeddings / sum_mask)
+            output_vector = torch.cat(output_vectors, 1)
+
+            #female_features.append(outputs)
+            female_features.append(output_vector.detach().view(-1).numpy())
 
         for sentence in tqdm(neutral_sentences, desc="Encoding neutral sentences"):
+            
+            output_vectors = []
             input_ids = tokenizer(
                 sentence, add_special_tokens=True, truncation=True, return_tensors="pt"
             ).to(device)
 
-            outputs = model(**input_ids)["last_hidden_state"]
-            outputs = torch.mean(outputs, dim=1)
-            outputs = outputs.squeeze().detach().cpu().numpy()
 
-            neutral_features.append(outputs)
+            #outputs = model(**input_ids)["last_hidden_state"]
+            outputs = model(**input_ids)
+            
+            #outputs = torch.mean(outputs, dim=1)
+            #outputs = outputs.squeeze().detach().cpu().numpy()
+            
+            token_embeddings = outputs['last_hidden_state']
+            attention_mask = input_ids['attention_mask']
+            
+            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+            sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
+
+            sum_mask = input_mask_expanded.sum(1)
+            sum_mask = torch.clamp(sum_mask, min=1e-9)
+            
+            # Mean pooling
+            output_vectors.append(sum_embeddings / sum_mask)
+            output_vector = torch.cat(output_vectors, 1)
+
+            #neutral_features.append(outputs)
+            neutral_features.append(output_vector.detach().view(-1).numpy())
 
     male_features = np.array(male_features)
     female_features = np.array(female_features)
@@ -86,26 +141,63 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
     # Encode the sentences.
     with torch.no_grad():
         for sentence in tqdm(bias_sentences, desc="Encoding bias sentences"):
+            output_vectors = []
             input_ids = tokenizer(
                 sentence, add_special_tokens=True, truncation=True, return_tensors="pt"
             ).to(device)
 
-            outputs = model(**input_ids)["last_hidden_state"]
-            outputs = torch.mean(outputs, dim=1)
-            outputs = outputs.squeeze().detach().cpu().numpy()
 
-            bias_features.append(outputs)
+            #outputs = model(**input_ids)["last_hidden_state"]
+            outputs = model(**input_ids)
+            
+            #outputs = torch.mean(outputs, dim=1)
+            #outputs = outputs.squeeze().detach().cpu().numpy()
+            
+            token_embeddings = outputs['last_hidden_state']
+            attention_mask = input_ids['attention_mask']
+            
+            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+            sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
+
+            sum_mask = input_mask_expanded.sum(1)
+            sum_mask = torch.clamp(sum_mask, min=1e-9)
+            
+            # Mean pooling
+            output_vectors.append(sum_embeddings / sum_mask)
+            output_vector = torch.cat(output_vectors, 1)
+            
+            #bias_features.append(outputs)
+            bias_features.append(output_vector.detach().view(-1).numpy())
+
 
         for sentence in tqdm(neutral_sentences, desc="Encoding neutral sentences"):
+            output_vectors = []
             input_ids = tokenizer(
                 sentence, add_special_tokens=True, truncation=True, return_tensors="pt"
             ).to(device)
 
-            outputs = model(**input_ids)["last_hidden_state"]
-            outputs = torch.mean(outputs, dim=1)
-            outputs = outputs.squeeze().detach().cpu().numpy()
 
-            neutral_features.append(outputs)
+            #outputs = model(**input_ids)["last_hidden_state"]
+            outputs = model(**input_ids)
+            
+            #outputs = torch.mean(outputs, dim=1)
+            #outputs = outputs.squeeze().detach().cpu().numpy()
+            
+            token_embeddings = outputs['last_hidden_state']
+            attention_mask = input_ids['attention_mask']
+            
+            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+            sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
+
+            sum_mask = input_mask_expanded.sum(1)
+            sum_mask = torch.clamp(sum_mask, min=1e-9)
+            
+            # Mean pooling
+            output_vectors.append(sum_embeddings / sum_mask)
+            output_vector = torch.cat(output_vectors, 1)
+            
+            neutral_features.append(output_vector.detach().view(-1).numpy())
+            #neutral_features.append(outputs)
 
     bias_features = np.array(bias_features)
     neutral_features = np.array(neutral_features)
@@ -253,5 +345,6 @@ def compute_projection_matrix(model, tokenizer, data, bias_type,  model_type, n_
     )
 
     P = torch.tensor(P, dtype=torch.float32)
+    print("Project matrix shape" , P.shape)
 
     return P
