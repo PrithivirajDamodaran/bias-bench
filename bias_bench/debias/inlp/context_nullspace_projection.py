@@ -57,7 +57,7 @@ def _extract_gender_features(
             
 
             #male_features.append(outputs)    
-            male_features.append(output_vector.detach().view(-1).numpy())
+            male_features.append(output_vector.detach().cpu().view(-1).numpy())
 
         for sentence in tqdm(female_sentences, desc="Encoding female sentences"):
             
@@ -86,7 +86,7 @@ def _extract_gender_features(
             output_vector = torch.cat(output_vectors, 1)
 
             #female_features.append(outputs)
-            female_features.append(output_vector.detach().view(-1).numpy())
+            female_features.append(output_vector.detach().cpu().view(-1).numpy())
 
         for sentence in tqdm(neutral_sentences, desc="Encoding neutral sentences"):
             
@@ -116,7 +116,7 @@ def _extract_gender_features(
             output_vector = torch.cat(output_vectors, 1)
 
             #neutral_features.append(outputs)
-            neutral_features.append(output_vector.detach().view(-1).numpy())
+            neutral_features.append(output_vector.detach().cpu().view(-1).numpy())
 
     male_features = np.array(male_features)
     female_features = np.array(female_features)
@@ -167,7 +167,7 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
             output_vector = torch.cat(output_vectors, 1)
             
             #bias_features.append(outputs)
-            bias_features.append(output_vector.detach().view(-1).numpy())
+            bias_features.append(output_vector.detach().cpu().view(-1).numpy())
 
 
         for sentence in tqdm(neutral_sentences, desc="Encoding neutral sentences"):
@@ -196,7 +196,7 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
             output_vectors.append(sum_embeddings / sum_mask)
             output_vector = torch.cat(output_vectors, 1)
             
-            neutral_features.append(output_vector.detach().view(-1).numpy())
+            neutral_features.append(output_vector.detach().cpu().view(-1).numpy())
             #neutral_features.append(outputs)
 
     bias_features = np.array(bias_features)
@@ -345,6 +345,6 @@ def compute_projection_matrix(model, tokenizer, data, bias_type,  model_type, n_
     )
 
     P = torch.tensor(P, dtype=torch.float32)
-    print("Project matrix shape" , P.shape)
+    print("==== Project matrix shape" , P.shape)
 
     return P
