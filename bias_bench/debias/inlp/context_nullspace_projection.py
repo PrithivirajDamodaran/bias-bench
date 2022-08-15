@@ -345,6 +345,5 @@ def compute_projection_matrix(model, tokenizer, data, bias_type,  model_type, n_
     )
 
     P = torch.tensor(P, dtype=torch.float32)
-    print("==== Project matrix shape" , P.shape)
 
     return P
