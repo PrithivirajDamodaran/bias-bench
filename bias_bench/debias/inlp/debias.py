@@ -24,8 +24,6 @@ def get_rowspace_projection(W: np.ndarray) -> np.ndarray:
         w_basis = scipy.linalg.orth(W.T)  # Orthogonal basis
 
     P_W = w_basis.dot(w_basis.T)  # Orthogonal projection on W's rowspace
-    print("==== Weight Matrix of a classifier " , W.shape)
-    print("==== Nul(W) of a classifier " , P_W.shape)
 
     return P_W
 
