@@ -1,7 +1,7 @@
 # Extending Bias-Bench for Sentence-Transformers
 ---
 
-## How to run the scripts diagnose and debias sentence-transformers.
+## How to run the scripts to diagnose and debias sentence-transformers.
 - For benchmarking a Sentence Transformer model run ```./experiments/seat.py``` with ```sentence-transformers/all-MiniLM-L6-v2``` as the model
 - Formula for ```WEAT effect size``` given by Caliskan et al is in the image below (implementation is straightforward, see code)
 - Download and extract ```wikipedia-2.5.txt.zip``` in ```/data/text/``` path of bias-bench repo
